@@ -109,7 +109,7 @@ void handleMessage(String message) {
 	Serial.println(message);
 	Serial.flush();
 
-	String responseMessage = "";
+	String responseMessage = "@";
 	if (message.startsWith(F("TEMP:")) || message.startsWith(F("temp"))) {
     sensor.readSensor();
     responseMessage += sensor.temperature();
@@ -117,16 +117,28 @@ void handleMessage(String message) {
 		sensor.readSensor();
     responseMessage += sensor.pressure();
 	} else if (message.startsWith(F("BAT")) || message.startsWith(F("bat"))) {
-    float measuredvbat = analogRead(VBATPIN);
-    measuredvbat *= 2;    // we divided by 2, so multiply back
-    measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
-    measuredvbat /= 1024; // convert to voltage
-    responseMessage += measuredvbat;
+    responseMessage += measureBatteryV();
+	} else if (message.startsWith(F("ALL")) || message.startsWith(F("all"))) {
+    sensor.readSensor();
+    responseMessage += sensor.pressure();
+    responseMessage += ',';
+    responseMessage += sensor.temperature();
+    responseMessage += ',';
+    responseMessage += measureBatteryV();
 	}
-  
+
+  responseMessage += '#';
   Serial.println(responseMessage);
   Serial.flush();
   ble.print(responseMessage);
   ble.flush();
+}
+
+float measureBatteryV() {
+    float measuredvbat = analogRead(VBATPIN);
+    measuredvbat *= 2;    // we divided by 2, so multiply back
+    measuredvbat *= 3.3;  // Multiply by 3.3V, our reference voltage
+    measuredvbat /= 1024; // convert to voltage
+    return measuredvbat;  
 }
 
