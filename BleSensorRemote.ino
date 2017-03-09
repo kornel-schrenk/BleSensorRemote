@@ -57,12 +57,23 @@ void setup() {
 
 	ble.echo(false);
 	ble.info();
+  
+  Serial.println(F("Setting device name to 'BleSensor': "));
+  if (! ble.sendCommandCheckOK(F("AT+GAPDEVNAME=BleSensor")) ) {
+    Serial.println(F("Could not set device name?"));
+  }
+ 
 	ble.verbose(false);
 
 	/* Wait for connection - Adafruit Bluefruit LE app has to be used to establish an UART connection. */
 	while (!ble.isConnected()) {
 		delay(500);
 	}
+
+  // Set module to DATA mode
+  Serial.println(F("Switching to DATA mode!"));
+  ble.setMode(BLUEFRUIT_MODE_DATA);
+ 
   Serial.println(F("\nREADY!\n"));
 }
 
