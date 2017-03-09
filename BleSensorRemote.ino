@@ -22,11 +22,10 @@ String messageBuffer = "";
 bool recordMessage = false;
 
 void setup() {
+  digitalWrite(ledPin, HIGH); //Turn the LED on
+  
 	Serial.begin(115200);
-
-	while (!Serial) { // Wait for USB Serial
-	}
-	delay(1000);
+	delay(500);
 
 	Serial.println(F("\nBleSensorRemote - START\n"));
 
@@ -75,6 +74,8 @@ void setup() {
   ble.setMode(BLUEFRUIT_MODE_DATA);
  
   Serial.println(F("\nREADY!\n"));
+    
+  digitalWrite(ledPin, LOW); //Turn the LED off
 }
 
 void loop() {
@@ -91,13 +92,13 @@ void loop() {
 
 void readMessageFromSerial(char data) {
 	if (data == '@') {
+    digitalWrite(ledPin, HIGH); //Turn the LED on
 		messageBuffer = "";
-		recordMessage = true;
-		digitalWrite(ledPin, HIGH); //Turn the LED on
+		recordMessage = true;		
 	} else if (data == '#') {  
 		handleMessage(messageBuffer);
-		recordMessage = false;
-		digitalWrite(ledPin, LOW); //Turn the LED off
+		recordMessage = false;		
+    digitalWrite(ledPin, LOW); //Turn the LED off
 	} else {
 		if (recordMessage) {
 			messageBuffer += data;
