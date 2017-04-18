@@ -1,6 +1,6 @@
 # BleSensorRemote
 
-For more information please see this blog [post](http://www.schrenk.hu)!
+For more information please see this blog [post](http://www.schrenk.hu/2017/04/18/BleSensor/)!
 
 ## Description
 
